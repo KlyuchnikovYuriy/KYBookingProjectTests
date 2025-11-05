@@ -87,7 +87,7 @@ class APIClient:
 
     def create_booking(self, booking_date):
         with allure.step('Creating booking'):
-            url = f"{self.base_url}{BOOKING_ENDPOINT}"
+            url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}"
             response = self.session.post(url, json=booking_date)
             response.raise_for_status()
         with allure.step('Checking status code'):
@@ -96,7 +96,7 @@ class APIClient:
 
     def get_booking_ids(self, params=None):
         with allure.step('Getting object with booking'):
-            url = f"{self.base_url}{BOOKING_ENDPOINT}"
+            url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}"
             response = self.session.get(url, params=params)
             response.raise_for_status()
         with allure.step('Checking status code'):
