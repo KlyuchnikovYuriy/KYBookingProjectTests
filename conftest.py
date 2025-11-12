@@ -15,10 +15,10 @@ def api_client():
 def booking_dates():
     today = datetime.today()
     checkin_date = today + timedelta(days=10)
-    checkout_date = chekin_date + timedelta(days=5)
+    checkout_date = checkin_date + timedelta(days=5)
 
     return {
-        "chekin": checkin_date.strftime('%Y-%m-%d'),
+        "checkin": checkin_date.strftime('%Y-%m-%d'),
         "checkout": checkout_date.strftime('%Y-%m-%d')
     }
 
