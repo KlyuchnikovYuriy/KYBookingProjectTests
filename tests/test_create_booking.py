@@ -1,10 +1,60 @@
 import allure
-import pytest
-import requests
+from pydantic import ValidationError
+from core.models.booking import BookingResponse
+
+@allure.feature('Test creating booking')
+@allure.story('Positive: creating booking with custom data')
+def test_create_booking_with_custom_data(api_client):
+    booking_data = {
+        "firstname": "Ivan",
+        "lastname": "Ivanovich",
+        "totalprice": 150,
+        "depositpaid": True,
+        "bookingdates": {
+            "checkin": "2025-02-01",
+            "checkout": "2025-02-18"
+        },
+        "additionalneeds": "Dinner"
+    }
+
+    response = api_client.create_booking(booking_data)
+    try:
+        BookingResponse(**response)
+    except ValidationError as e:
+        raise ValidationError(f"Response validation failed: {e}")
+
+    assert response['booking']['firstname'] == booking_data['firstname']
+    assert response['booking']['lastname'] == booking_data['lastname']
+    assert response['booking']['totalprice'] == booking_data['totalprice']
+    assert response['booking']['depositpaid'] == booking_data['depositpaid']
+    assert response['booking']['bookingdates']['checkin'] == booking_data['bookingdates']['checkin']
+    assert response['booking']['bookingdates']['checkout'] == booking_data['bookingdates']['checkout']
+    assert response['booking']['additionalneeds'] == booking_data['additionalneeds']
 
 
-@allure.feature('Test Create Booking')
-@allure.story('Test successful booking creation')
-def test_create_booking_success(api_client, sample_booking_data):
-    booking_id = api_client.create_booking(sample_booking_data)
-    assert isinstance(booking_id, int), f"Expected booking_id to be int but got {type(booking_id)}"
+@allure.feature('Test creating booking')
+@allure.story('Positive: creating booking with random data')
+def test_create_booking_with_random_data(api_client, booking_dates):
+    booking_data = {
+        "firstname": "Ivan",
+        "lastname": "Ivanovich",
+        "totalprice": 150,
+        "depositpaid": True,
+        "bookingdates": booking_dates,
+        "additionalneeds": "Dinner"
+    }
+
+    response = api_client.create_booking(booking_data)
+    try:
+        BookingResponse(**response)
+    except ValidationError as e:
+        raise ValidationError(f"Response validation failed: {e}")
+
+    assert response['booking']['firstname'] == booking_data['firstname']
+    assert response['booking']['lastname'] == booking_data['lastname']
+    assert response['booking']['totalprice'] == booking_data['totalprice']
+    assert response['booking']['depositpaid'] == booking_data['depositpaid']
+    assert response['booking']['bookingdates']['checkin'] == booking_data['bookingdates']['checkin']
+    assert response['booking']['bookingdates']['checkout'] == booking_data['bookingdates']['checkout']
+    assert response['booking']['additionalneeds'] == booking_data['additionalneeds']
+
