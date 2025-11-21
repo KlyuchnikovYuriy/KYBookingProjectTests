@@ -1,3 +1,4 @@
+import pytest
 import allure
 from pydantic import ValidationError
 from core.models.booking import BookingResponse
@@ -50,6 +51,25 @@ def test_create_booking_with_random_data(api_client, generate_random_booking_dat
     assert response['booking']['bookingdates']['checkout'] == generate_random_booking_data['bookingdates']['checkout']
     assert response['booking']['additionalneeds'] == generate_random_booking_data['additionalneeds']
 
+
+@allure.feature('Test creating booking')
+@allure.story('Negative: creating booking with invalid data')
+def test_create_booking_with_invalid_data(api_client):
+    invalid_booking_data = {
+        "firstname": 150,
+        "lastname": 150,
+        "totalprice": "Ivanovich",
+        "depositpaid": True,
+        "bookingdates": {
+            "checkin": "2025-02-01",
+            "checkout": "2025-02-18"
+        },
+        "additionalneeds": "Dinner"
+    }
+
+    with pytest.raises(ValidationError):
+        response = api_client.create_booking(invalid_booking_data)
+        BookingResponse(**response)
 
 
 
