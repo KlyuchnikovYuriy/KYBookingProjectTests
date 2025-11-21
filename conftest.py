@@ -24,7 +24,7 @@ def booking_dates():
 
 
 @pytest.fixture()
-def generate_random_booking_data(booking_date):
+def generate_random_booking_data(booking_dates):
     faker = Faker()
     firstname = faker.first_name()
     lastname = faker.last_name()
@@ -37,7 +37,7 @@ def generate_random_booking_data(booking_date):
         "lastname": lastname,
         "totalprice": totalprice,
         "depositpaid": depositpaid,
-        "bookingdates": booking_date,
+        "bookingdates": booking_dates,
         "additionalneeds": additionalneeds
     }
 
