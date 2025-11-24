@@ -2,6 +2,8 @@ import pytest
 import allure
 from pydantic import ValidationError
 from core.models.booking import BookingResponse
+from requests.exceptions import HTTPError
+
 
 @allure.feature('Test creating booking')
 @allure.story('Positive: creating booking with custom data')
@@ -67,9 +69,10 @@ def test_create_booking_with_invalid_data(api_client):
         "additionalneeds": "Dinner"
     }
 
-    with pytest.raises(ValidationError):
-        response = api_client.create_booking(invalid_booking_data)
-        BookingResponse(**response)
+    with pytest.raises(HTTPError):
+        api_client.create_booking(invalid_booking_data)
+
+
 
 
 
